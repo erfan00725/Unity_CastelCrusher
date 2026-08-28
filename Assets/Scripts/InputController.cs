@@ -50,8 +50,6 @@ public class InputController : MonoBehaviour
                     _dragPos.x = (_dragPos.x / _windowWidth) * touchSensitivityX;
                     _touchSensitivityY = Mathf.Lerp(touchSensitivityMaxY, touchSensitivityMinY , _dragPos.y / _windowHeight);
                     _dragPos.y = Mathf.Clamp(((_dragPos.y / _windowHeight) * _touchSensitivityY * 60) + 60, 0, 60);
-                    // Debug.Log(_touchSensitivityY);
-                    Debug.Log(_dragPos.y);
 
                     _buletLuncher.RotateCatapultHead(_dragPos.y);
 
@@ -63,7 +61,7 @@ public class InputController : MonoBehaviour
                 case TouchPhase.Ended:
                     _endPos = touch.position;
                     _buletLuncher.ResetCatapultHeadRotation();
-                    _buletLuncher.ResetCatapultBodyRotation();
+                    // _buletLuncher.ResetCatapultBodyRotation();
                     break;
             }
             

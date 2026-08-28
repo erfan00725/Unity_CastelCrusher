@@ -13,10 +13,12 @@ public class Projectile : MonoBehaviour
     void Start()
     {
         _rb = GetComponent<Rigidbody>();
+        _rb.isKinematic = true;
     }
 
     private void OnCollisionEnter(Collision collision)
     {
+        Debug.Log(collision.gameObject.name);
         if (!collision.gameObject.CompareTag("Start"))
         {
             StartCoroutine(DelayDestroy(delayBeforeDestroy));
@@ -31,6 +33,8 @@ public class Projectile : MonoBehaviour
 
     public void Shoot(float force = 1)
     {
-        _rb.AddForce(new Vector3(-1,1,0) * (baseForcePower * force * Time.deltaTime), ForceMode.Impulse);
+        _rb.isKinematic = false;
+        transform.SetParent(null);
+        _rb.AddRelativeForce(new Vector3(-1,1,0) * (baseForcePower * force * Time.deltaTime), ForceMode.Impulse);
     }
 }

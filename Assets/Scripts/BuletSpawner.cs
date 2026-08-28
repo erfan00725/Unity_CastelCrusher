@@ -19,6 +19,6 @@ public class BuletSpawner : MonoBehaviour
 
     public Projectile InstantiateBullet()
     {
-        return Instantiate(projectilePrefab, transform.position, transform.rotation);
+        return Instantiate(projectilePrefab, transform.position, transform.rotation, gameObject.transform);
     }
 }
