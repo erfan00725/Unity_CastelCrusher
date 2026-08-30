@@ -26,9 +26,6 @@ public class LockLocationTest : MonoBehaviour
         float rotZ = transform.rotation.eulerAngles.z;
         float rotY = transform.rotation.eulerAngles.y;
         
-        Debug.Log(horizental);
-        Debug.Log(vertental);
-
         if (horizental!=0)
         {
             target.transform.rotation =  new Quaternion(rotX + (horizental * Time.deltaTime), rotZ, rotY, 0);

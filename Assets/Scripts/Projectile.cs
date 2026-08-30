@@ -18,7 +18,6 @@ public class Projectile : MonoBehaviour
 
     private void OnCollisionEnter(Collision collision)
     {
-        Debug.Log(collision.gameObject.name);
         if (!collision.gameObject.CompareTag("Start"))
         {
             StartCoroutine(DelayDestroy(delayBeforeDestroy));
