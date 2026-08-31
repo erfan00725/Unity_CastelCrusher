@@ -8,9 +8,6 @@ public class InputController : MonoBehaviour
     private Vector2 _dragPos;
     private Vector2 _endPos;
     
-    private float _windowWidth = 0;
-    private float _windowHeight = 0;
-    
     public float touchSensitivityMinY = 1f;
     public float touchSensitivityMaxY = 4f;
 
@@ -23,8 +20,7 @@ public class InputController : MonoBehaviour
 
     void Start()
     {
-        _windowWidth = Screen.width;
-        _windowHeight = Screen.height;
+
         
         _buletLuncher = GetComponent<BuletLuncher>();
         
@@ -34,6 +30,9 @@ public class InputController : MonoBehaviour
     void Update()
     {
         _jumpBtn = Input.GetAxisRaw("Jump");
+        
+        float windowWidth = Screen.width;
+        float windowHeight = Screen.height;
 
         if (Input.touchCount > 0)
         {
@@ -47,9 +46,9 @@ public class InputController : MonoBehaviour
                     _dragPos = touch.position - _startPos;
 
                     // could use clamp and some low value number for this
-                    _dragPos.x = (_dragPos.x / _windowWidth) * touchSensitivityX;
-                    _touchSensitivityY = Mathf.Lerp(touchSensitivityMaxY, touchSensitivityMinY , _dragPos.y / _windowHeight);
-                    _dragPos.y = Mathf.Clamp(((_dragPos.y / _windowHeight) * _touchSensitivityY * 60) + 60, 0, 60);
+                    _dragPos.x = (_dragPos.x / windowWidth) * touchSensitivityX;
+                    _touchSensitivityY = Mathf.Lerp(touchSensitivityMaxY, touchSensitivityMinY , _dragPos.y / windowHeight);
+                    _dragPos.y = Mathf.Clamp(((_dragPos.y / windowHeight) * _touchSensitivityY * 60) + 60, 0, 60);
 
                     _buletLuncher.RotateCatapultHead(_dragPos.y);
 
