@@ -153,6 +153,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Projectile
   baseForcePower: 400
   delayBeforeDestroy: 1
+  shakeIntensity: 0.8
+  shakeDuration: 0.4
 --- !u!114 &-6513623392403331699
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -166,3 +168,4 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ProjectileParticleManager
   impactParticle: {fileID: 294568767238886930, guid: 5b51324c64642cd4595d9a92abe35cf7, type: 3}
+  impactThreshold: 5

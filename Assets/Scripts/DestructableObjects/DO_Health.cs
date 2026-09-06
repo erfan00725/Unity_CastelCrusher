@@ -7,6 +7,8 @@ public class DO_Health : MonoBehaviour
     public float maxHealth = 100f;
     public float delayBeforeDestroy = 1f;
     
+    public int deathScoreValue = 100;
+    
     private float _currentHealth;
 
     private void Start()
@@ -37,6 +39,7 @@ public class DO_Health : MonoBehaviour
     
     IEnumerator DieRoutine()
     {
+        ScoreManager.I.AddScore(deathScoreValue);
         yield return new WaitForSeconds(delayBeforeDestroy);
         Destroy(gameObject);
     }
