@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class DO_LowHealthRedTint : MonoBehaviour
+public class DOLowHealthRedTint : MonoBehaviour
 {
     [SerializeField] private Renderer targetRenderer;
     [SerializeField] private Color fullHealthColor = Color.white;

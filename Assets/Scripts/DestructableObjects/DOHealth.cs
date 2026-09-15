@@ -2,7 +2,7 @@ using System;
 using System.Collections;
 using UnityEngine;
 
-public class DO_Health : MonoBehaviour
+public class DOHealth : MonoBehaviour
 {
     public float maxHealth = 100f;
     public float delayBeforeDestroy = 1f;

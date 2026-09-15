@@ -1,9 +1,10 @@
 using System;
 using UnityEngine;
 
-public class ProjectileSoundManager : MonoBehaviour
+public class DOSoundManager : MonoBehaviour
 {
     public SO_AudioConfigBase audioConfig;
+    public float hitSoundThreshold = 1f;
 
     private AudioSource _audioSource;
 
@@ -14,8 +15,7 @@ public class ProjectileSoundManager : MonoBehaviour
 
     public void PlayHitSound(float impactForce = 1f)
     {
-        return;
-        if (_audioSource)
+        if (_audioSource && impactForce >= hitSoundThreshold)
         {
             audioConfig.Play(_audioSource, impactForce);
         }
