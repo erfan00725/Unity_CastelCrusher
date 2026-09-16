@@ -3,58 +3,113 @@ using UnityEngine;
 [RequireComponent(typeof(Camera))]
 public class CameraShakeManager : MonoBehaviour
 {
-    [Tooltip("Max displacement in world units (0.5 ≈ half a unit, tune per scene scale).")]
-    public float intensity = 0.5f;
+    [Header("Impulse")]
+    [Tooltip("Kick direction in screen space, normalized automatically. (0,-1) = recoil downward.")]
+    public Vector2 impulseDirection = new Vector2(-1f, -2f);
 
-    [Tooltip("How long one shake lasts once triggered.")]
-    public float duration = 0.4f;
+    [Tooltip("Multiplier on the incoming force. Higher = harder kick per shot.")]
+    public float impulseStrength = 15f;
 
-    [Tooltip("Higher = more jittery. 20 is Perlin-like, 50+ is raw noise.")]
-    public float frequency = 20f;
+    [Header("Spring")]
+    [Tooltip("How snappy the return to rest is. Higher = faster, tighter spring.")]
+    public float stiffness = 120f;
+
+    [Tooltip("How quickly the wobble calms. Slightly under-damped gives one soft overshoot.")]
+    public float damping = 14f;
+
+    [Tooltip("Camera roll tilt (Z rotation, degrees) applied per unit of force. 0 = off.")]
+    public float rollStrength = 0.5f;
+
+    [Header("Safety")]
+    [Tooltip("Max distance from rest the camera can be pushed. Prevents extreme forces flinging the view.")]
+    public float maxOffset = 0.6f;
 
     private Camera _cam;
-    private float _shakeAmount;
-    private float _shakeTime;
-    
-    private Vector3 _originalPosition;
+    private Vector3 _restLocalPosition;
+    private Quaternion _restLocalRotation;
+
+    private Vector2 _offset;
+    private Vector2 _velocity;
+    private float _roll;
+    private float _rollVelocity;
+
+    private bool _settled = true;
 
     void Awake() => _cam = GetComponent<Camera>();
 
-    // Call from anywhere: FindObjectOfType<CameraShake>().Shake(1.2f);
-    public void Shake(float force, float durationOverride = 0f)
+    void Start()
+    {
+        RecordRest();
+    }
+
+    // Call from anywhere: CameraShakeManager.Shake(force);
+    public void Shake(float force)
     {
         if (force <= 0f) return;
-        _shakeAmount = Mathf.Max(_shakeAmount, force);
-        _shakeTime   = Mathf.Max(_shakeTime, durationOverride > 0f ? durationOverride : duration);
-    }
-    
-    private void Start()
-    {
-        _originalPosition = _cam.transform.localPosition;
+
+        Vector2 dir = impulseDirection.sqrMagnitude > 0.0001f
+            ? impulseDirection.normalized
+            : Vector2.down;
+
+        _velocity += dir * (force * impulseStrength);
+        _rollVelocity += force * rollStrength;
+        _settled = false;
     }
 
     void LateUpdate()
     {
-        if (_shakeAmount <= 0f || !_cam) return;
+        if (!_cam) return;
 
-        _shakeTime -= Time.deltaTime;
-        if (_shakeTime <= 0f)
+        // While calm, continuously note where "home" is so external camera moves are respected.
+        if (_settled)
         {
-            _cam.transform.localPosition = _originalPosition;
-            _shakeAmount = 0f;
+            RecordRest();
             return;
         }
 
-        float t = 1f - _shakeTime / Mathf.Max(duration, 0.0001f);   // 0→1 over the window
-        float decay = Mathf.Lerp(_shakeAmount, 0f, t);               // linear decay; swap to AnimationCurve later if you want eased
+        float dt = Time.deltaTime;
 
-        // 2D screen-plane shake only (no Z — cameras rarely want that)
-        Vector3 offset = new Vector3(
-            0f,
-            (Mathf.PerlinNoise(0f, Time.time * frequency) - 0.5f),
-            (Mathf.PerlinNoise(Time.time * frequency, 0f) - 0.5f)
-        ) * decay;
+        // Semi-implicit Euler integration of two damped springs (position + roll).
+        Vector2 accel = -stiffness * _offset - damping * _velocity;
+        _velocity += accel * dt;
+        _offset += _velocity * dt;
+        _offset = Vector2.ClampMagnitude(_offset, maxOffset);
 
-        _cam.transform.localPosition += offset;   // additive: composes with any existing camera motion
+        float rollAccel = -stiffness * _roll - damping * _rollVelocity;
+        _rollVelocity += rollAccel * dt;
+        _roll += _rollVelocity * dt;
+
+        if (IsSleeping())
+        {
+            _offset = Vector2.zero;
+            _velocity = Vector2.zero;
+            _roll = 0f;
+            _rollVelocity = 0f;
+            _settled = true;
+            Apply(Vector2.zero, 0f);
+            return;
+        }
+
+        Apply(_offset, _roll);
+    }
+
+    private void Apply(Vector2 offset, float roll)
+    {
+        _cam.transform.localPosition = _restLocalPosition + new Vector3(offset.x, offset.y, 0f);
+        _cam.transform.localRotation = _restLocalRotation * Quaternion.Euler(0f, 0f, roll);
+    }
+
+    private void RecordRest()
+    {
+        _restLocalPosition = _cam.transform.localPosition;
+        _restLocalRotation = _cam.transform.localRotation;
+    }
+
+    private bool IsSleeping()
+    {
+        return _offset.sqrMagnitude < 0.0001f
+            && _velocity.sqrMagnitude < 0.0001f
+            && Mathf.Abs(_roll) < 0.01f
+            && Mathf.Abs(_rollVelocity) < 0.01f;
     }
 }
