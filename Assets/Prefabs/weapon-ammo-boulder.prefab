@@ -262,7 +262,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d1114fbe00a50e84687d6bc652ccf83c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ProjectileSoundManager
-  audioConfig: {fileID: 11400000, guid: c33d60e4f35a2e04780dc215c7d069f1, type: 2}
+  audioConfig: {fileID: 11400000, guid: 278c3e65226f09c40b8b1bf933b957e5, type: 2}
 --- !u!135 &6409873898730063300
 SphereCollider:
   m_ObjectHideFlags: 0

@@ -14,7 +14,6 @@ public class ProjectileSoundManager : MonoBehaviour
 
     public void PlayHitSound(float impactForce = 1f)
     {
-        return;
         if (_audioSource)
         {
             audioConfig.Play(_audioSource, impactForce);
