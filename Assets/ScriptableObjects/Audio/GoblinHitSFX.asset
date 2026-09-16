@@ -10,14 +10,10 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 96d76776c0c7dd140a1db85de28c7d6b, type: 3}
-  m_Name: WoodHitSFX
+  m_Name: GoblinHitSFX
   m_EditorClassIdentifier: Assembly-CSharp::SO_AudioConfigBase
   clips:
-  - {fileID: 8300000, guid: 9957f9f739defef4fa31482d61d633aa, type: 3}
-  - {fileID: 8300000, guid: e06a36c09d097ef43b1b8a0ea86773c3, type: 3}
-  - {fileID: 8300000, guid: 50a22da1fdc307f479e1f8ae99734a48, type: 3}
-  - {fileID: 8300000, guid: a45188abc3979da438db42c35b0e1d9a, type: 3}
-  - {fileID: 8300000, guid: 640fa504333f3cd4d9e3be34d021ff0a, type: 3}
+  - {fileID: 8300000, guid: 976ac404b75dc0241bc4d3879ba3aca5, type: 3}
   volume: 1
-  minPitch: 0.8
-  maxPitch: 1.3
+  minPitch: 0.75
+  maxPitch: 1.25
