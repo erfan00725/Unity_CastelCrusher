@@ -5,7 +5,7 @@ using UnityEngine.Serialization;
 
 public class BuletLuncher : MonoBehaviour
 {
-    public BuletSpawner bs;
+    public BulletSpawner bs;
     
     public float cooldown = 0.5f;
 
