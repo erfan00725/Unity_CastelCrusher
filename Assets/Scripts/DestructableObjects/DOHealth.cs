@@ -8,8 +8,11 @@ public class DOHealth : MonoBehaviour
     public float delayBeforeDestroy = 1f;
     
     public int deathScoreValue = 100;
+    public ScorePopup scorePopupPrefab;
     
     private float _currentHealth;
+    
+    private bool _isDead = false;
 
     private void Start()
     {
@@ -34,12 +37,24 @@ public class DOHealth : MonoBehaviour
     
     public void Die()
     {
+        if (_isDead) return;
         StartCoroutine(DieRoutine());
     }
     
     IEnumerator DieRoutine()
     {
+        if (_isDead) yield return null;
+        
+        _isDead = true;
+        
         ScoreManager.I.AddScore(deathScoreValue);
+        
+        if (scorePopupPrefab)
+        {
+            ScorePopup popup = Instantiate(scorePopupPrefab, transform.position, Quaternion.identity);
+            popup.Show(deathScoreValue);
+        }
+        
         yield return new WaitForSeconds(delayBeforeDestroy);
         Destroy(gameObject);
     }

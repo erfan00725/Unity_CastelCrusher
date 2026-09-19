@@ -22,7 +22,6 @@ public class ScoreManager : MonoBehaviour
     public float AddScore(int points)
     {
         _score += points;
-        Debug.Log("Score: " + _score);
 
         if (uiManager)
         {

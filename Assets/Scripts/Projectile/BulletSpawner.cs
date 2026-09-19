@@ -35,7 +35,7 @@ public class BulletSpawner : MonoBehaviour
             
             return Instantiate(projectilePrefab, transform.position, transform.rotation, gameObject.transform);
         }
-        Debug.LogWarning("No bullets available");
+
         if (uiManager)
         {
             uiManager.SetBulletCountText(0);

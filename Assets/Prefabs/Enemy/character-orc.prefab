@@ -169,8 +169,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::DO_Health
   maxHealth: 50
-  delayBeforeDestroy: 1
+  delayBeforeDestroy: 0.75
   deathScoreValue: 100
+  scorePopupPrefab: {fileID: 6313532905276699770, guid: f4a93c773cd63a5409fedf284eda8e98, type: 3}
 --- !u!114 &-3063210472827276231
 MonoBehaviour:
   m_ObjectHideFlags: 0

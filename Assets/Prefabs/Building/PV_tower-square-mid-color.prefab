@@ -54,7 +54,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3182099971242241832, guid: a021e89e0e7fd854292690cbf1c489d3, type: 3}
       propertyPath: m_Name
-      value: P_tower-square-mid (2) Variant
+      value: PV_tower-square-mid-color
       objectReference: {fileID: 0}
     - target: {fileID: 7530659958175683769, guid: a021e89e0e7fd854292690cbf1c489d3, type: 3}
       propertyPath: m_Size.y
