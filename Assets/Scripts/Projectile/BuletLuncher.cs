@@ -11,6 +11,10 @@ public class BuletLuncher : MonoBehaviour
 
     // Seconds the catapult head takes to return to its rest rotation
     public float headResetDuration = 0.3f;
+    
+    public SO_AudioConfigBase audioConfig;
+    
+    public AudioSource luncherReleaseAudio;
 
     public GameObject catapultHead;
 
@@ -21,12 +25,14 @@ public class BuletLuncher : MonoBehaviour
     private Quaternion _initiateCatapultBodyRotation = Quaternion.identity;
 
     private Coroutine _headResetRoutine;
+    
+    
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
         _activeBullet = bs.InstantiateBullet();
-
+        
         if (catapultHead)
         {
             _initiateCatapultHeadRotation = catapultHead.transform.localRotation;
@@ -65,6 +71,11 @@ public class BuletLuncher : MonoBehaviour
             float mag = 1 - (Mathf.Clamp(catapultHead.transform.localRotation.eulerAngles.magnitude, 0, 60) / 60);
             if (mag > 0.1f)
             {
+                if (luncherReleaseAudio && audioConfig)
+                {
+                    audioConfig.Play(luncherReleaseAudio, mag);
+                }
+                
                 _activeBullet.Shoot(mag);
                 StartCoroutine(DelaySpawn(cooldown));
             }

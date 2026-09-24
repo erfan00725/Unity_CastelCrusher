@@ -12,7 +12,7 @@ public class InputController : MonoBehaviour
     public float touchSensitivityMaxY = 4f;
 
     private float _touchSensitivityY = 1;
-
+    
     public float touchSensitivityX = 50;
     
     private BuletLuncher _buletLuncher;
