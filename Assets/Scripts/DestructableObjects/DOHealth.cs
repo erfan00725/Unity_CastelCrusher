@@ -9,6 +9,8 @@ public class DOHealth : MonoBehaviour
     
     public int deathScoreValue = 100;
     public ScorePopup scorePopupPrefab;
+
+    public event System.Action OnDeath;
     
     private float _currentHealth;
     
@@ -43,9 +45,11 @@ public class DOHealth : MonoBehaviour
     
     IEnumerator DieRoutine()
     {
-        if (_isDead) yield return null;
+        if (_isDead) yield break;
         
         _isDead = true;
+        
+        OnDeath?.Invoke();
         
         ScoreManager.I.AddScore(deathScoreValue);
         
