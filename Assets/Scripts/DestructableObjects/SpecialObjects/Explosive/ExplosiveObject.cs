@@ -1,4 +1,3 @@
-using System;
 using UnityEngine;
 
 [RequireComponent(typeof(DOHealth))]
@@ -23,11 +22,6 @@ public class ExplosiveObject : MonoBehaviour
     private void Awake() => _health = GetComponent<DOHealth>();
     private void OnEnable() => _health.OnDeath += Explode;
     private void OnDisable() => _health.OnDeath -= Explode;
-
-    private void Update()
-    {
-        Debug.DrawLine(transform.position, transform.position + (Vector3.forward * radius), Color.red, 1);
-    }
 
     private void Explode()
     {
@@ -80,7 +74,7 @@ public class ExplosiveObject : MonoBehaviour
         CameraShakeManager shake = FindAnyObjectByType<CameraShakeManager>();
         if (shake) shake.Shake(shakeForce);
 
-        ExplosiveSoundManager sound = GetComponent<ExplosiveSoundManager>();
+        ExplosionSoundManager sound = GetComponent<ExplosionSoundManager>();
         if (sound) sound.PlayExplosionSound(1f);
     }
 

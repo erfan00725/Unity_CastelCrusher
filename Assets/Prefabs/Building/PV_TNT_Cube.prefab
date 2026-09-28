@@ -8,21 +8,25 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: -5520650556380251522, guid: a021e89e0e7fd854292690cbf1c489d3, type: 3}
+      propertyPath: m_PlayOnAwake
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 1210654840021318199, guid: a021e89e0e7fd854292690cbf1c489d3, type: 3}
       propertyPath: m_Mesh
       value: 
       objectReference: {fileID: -5495902117074765545, guid: fc6885a5f01633c48922287f2473dbac, type: 3}
     - target: {fileID: 2838050329274938770, guid: a021e89e0e7fd854292690cbf1c489d3, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -10.7
+      value: -3.46
       objectReference: {fileID: 0}
     - target: {fileID: 2838050329274938770, guid: a021e89e0e7fd854292690cbf1c489d3, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 1.0100002
+      value: -4.04
       objectReference: {fileID: 0}
     - target: {fileID: 2838050329274938770, guid: a021e89e0e7fd854292690cbf1c489d3, type: 3}
       propertyPath: m_LocalPosition.z
-      value: -0.05000026
+      value: -0.93000025
       objectReference: {fileID: 0}
     - target: {fileID: 2838050329274938770, guid: a021e89e0e7fd854292690cbf1c489d3, type: 3}
       propertyPath: m_LocalRotation.w
@@ -64,6 +68,10 @@ PrefabInstance:
       propertyPath: 'm_Materials.Array.data[0]'
       value: 
       objectReference: {fileID: -1718874838987408662, guid: fc6885a5f01633c48922287f2473dbac, type: 3}
+    - target: {fileID: 6244643744320464765, guid: a021e89e0e7fd854292690cbf1c489d3, type: 3}
+      propertyPath: maxHealth
+      value: 10
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -105,10 +113,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6b10ca4a5cecbb942a9286d4cd8511cf, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ExplosiveObject
-  radius: 3
-  maxForce: 750
-  explosionDamage: 150
-  upwardBias: 0.35
+  radius: 2
+  maxForce: 100
+  explosionDamage: 100
+  upwardBias: 0.3
   affectedLayers:
     serializedVersion: 2
     m_Bits: 8

@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class ExplosiveSoundManager : MonoBehaviour
+public class ExplosionSoundManager : MonoBehaviour
 {
     public SO_AudioConfigBase audioConfig;
 

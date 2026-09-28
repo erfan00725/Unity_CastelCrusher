@@ -33,10 +33,5 @@ public class DOManageImpact : MonoBehaviour
         {
             _lowHealthRedTint.UpdateHealthColor(currentHealth, _health.maxHealth);
         }
-
-        if (_health.IsDead())
-        {
-            _health.Die();
-        }
     }
 }

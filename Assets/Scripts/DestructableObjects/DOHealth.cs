@@ -24,6 +24,11 @@ public class DOHealth : MonoBehaviour
     public float TakeDamage(float damage)
     {
         _currentHealth -= damage;
+        if (IsDead())
+        {
+            Die();
+        }
+        
         return _currentHealth;
     }
     
