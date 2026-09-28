@@ -112,6 +112,6 @@ MonoBehaviour:
   affectedLayers:
     serializedVersion: 2
     m_Bits: 8
-  explosionParticle: {fileID: 0}
+  explosionParticle: {fileID: 5705542359493781635, guid: 9875fee201eeba647950ed3eee985646, type: 3}
   shakeForce: 2
   particleLifetime: 3
