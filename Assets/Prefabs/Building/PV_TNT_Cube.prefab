@@ -111,7 +111,7 @@ MonoBehaviour:
   upwardBias: 0.35
   affectedLayers:
     serializedVersion: 2
-    m_Bits: 4294967295
+    m_Bits: 8
   explosionParticle: {fileID: 0}
   shakeForce: 2
   particleLifetime: 3
