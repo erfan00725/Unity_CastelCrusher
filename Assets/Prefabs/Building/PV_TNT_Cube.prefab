@@ -106,12 +106,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ExplosiveObject
   radius: 3
-  maxForce: 1000
+  maxForce: 750
   explosionDamage: 150
   upwardBias: 0.35
   affectedLayers:
     serializedVersion: 2
     m_Bits: 8
   explosionParticle: {fileID: 5705542359493781635, guid: 9875fee201eeba647950ed3eee985646, type: 3}
-  shakeForce: 2
+  shakeForce: 1000
   particleLifetime: 3
