@@ -113,13 +113,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6b10ca4a5cecbb942a9286d4cd8511cf, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ExplosiveObject
-  radius: 2
-  maxForce: 100
-  explosionDamage: 100
-  upwardBias: 0.3
-  affectedLayers:
-    serializedVersion: 2
-    m_Bits: 8
+  blastData:
+    radius: 2
+    maxForce: 100
+    explosionDamage: 100
+    upwardBias: 0.3
+    affectedLayers:
+      serializedVersion: 2
+      m_Bits: 8
   explosionParticle: {fileID: 5705542359493781635, guid: 9875fee201eeba647950ed3eee985646, type: 3}
   shakeForce: 1000
   particleLifetime: 3
