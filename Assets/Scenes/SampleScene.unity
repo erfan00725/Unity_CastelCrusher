@@ -6057,7 +6057,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 99783a1a430a8c54c8bf2072ac248b98, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::BuletSpawner
-  projectilePrefab: {fileID: 128308086753935311, guid: 228c366093eabba4e90c393747a9e8ba, type: 3}
+  projectilePrefab: {fileID: 128308086753935311, guid: 62e617fe8c983244f84c428be5da5364, type: 3}
   uiManager: {fileID: 2123016087}
   maxBulletsCount: 10
 --- !u!4 &799082387

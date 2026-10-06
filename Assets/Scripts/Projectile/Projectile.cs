@@ -29,15 +29,15 @@ public class Projectile : MonoBehaviour
             {
                 _soundManager.PlayHitSound(collision.relativeVelocity.magnitude);
             }
-            StartCoroutine(DelayDestroy(delayBeforeDestroy));
+            Destroy(gameObject, delayBeforeDestroy);
         }
     }
 
-    IEnumerator DelayDestroy(float delayTime)
+    /*IEnumerator DelayDestroy(float delayTime)
     {
         yield return new WaitForSeconds(delayTime);
         Destroy(gameObject);
-    }
+    }*/
 
     public void Shoot(float force = 1)
     {

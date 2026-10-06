@@ -1,0 +1,19 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 13f84bc76022d2241ae4d8213a10f345, type: 3}
+  m_Name: Projectile_Wood
+  m_EditorClassIdentifier: Assembly-CSharp::SO_ProjectileType
+  displayName: Wooden Projectile
+  icon: {fileID: -6345082514573911126, guid: 08babb3fa6ed0ef4db3e878fb1cd3bfc, type: 3}
+  ammoCount: 5
+  prefab: {fileID: 128308086753935311, guid: 228c366093eabba4e90c393747a9e8ba, type: 3}
+  scoreMultiplier: 1
