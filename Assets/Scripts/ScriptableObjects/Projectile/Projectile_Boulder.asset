@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 13f84bc76022d2241ae4d8213a10f345, type: 3}
   m_Name: Projectile_Boulder
   m_EditorClassIdentifier: Assembly-CSharp::SO_ProjectileType
-  displayName: 
+  displayName: Boulder
   icon: {fileID: -7490549210145418512, guid: 7e5407fdea54502428a1b2fe8342da96, type: 3}
   ammoCount: 5
   prefab: {fileID: 128308086753935311, guid: 6968551c5e04ff240b83f9376fe1fc6a, type: 3}
