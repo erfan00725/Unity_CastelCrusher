@@ -12,6 +12,8 @@ public class BulletSpawner : MonoBehaviour
     public event Action<SO_ProjectileType, int> OnAmmoChanged;
     
     private readonly Dictionary<SO_ProjectileType, int> _ammo = new Dictionary<SO_ProjectileType, int>();
+    
+    // Separate Ammo management Logic to another class later
 
     private void Awake()
     {
