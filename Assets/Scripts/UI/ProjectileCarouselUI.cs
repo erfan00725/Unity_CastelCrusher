@@ -5,6 +5,9 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
+// Bottom-carousel for projectile types. Keeps the selected type in the
+// middle slot and slides the neighbours around it; tapping a side button
+// "swaps" it into the middle.
 public class ProjectileCarouselUI : MonoBehaviour
 {
     [Header("Wiring")]
@@ -27,9 +30,10 @@ public class ProjectileCarouselUI : MonoBehaviour
     public int CurrentVisibleSideButtons { get; private set; } = 2;
 
     private readonly List<GameObject> _buttons = new List<GameObject>();
+    private readonly Dictionary<SO_ProjectileType, float> _previousSlotX = new Dictionary<SO_ProjectileType, float>();
     private Coroutine _tweenRoutine;
     private int _lastSeenWidth = -1;
-    
+
     private void OnEnable()
     {
         if (selector) selector.OnSelectionChanged += HandleSelectionChanged;
@@ -43,7 +47,7 @@ public class ProjectileCarouselUI : MonoBehaviour
         if (selector) selector.OnSelectionChanged -= HandleSelectionChanged;
         if (spawner) spawner.OnAmmoChanged -= HandleAmmoChanged;
     }
-    
+
     private void HandleSelectionChanged(SO_ProjectileType type) => Rebuild(true);
 
     private void HandleAmmoChanged(SO_ProjectileType type, int remaining) => RefreshAmmoDisplays();
@@ -65,10 +69,12 @@ public class ProjectileCarouselUI : MonoBehaviour
         CurrentVisibleSideButtons = CarouselLayoutCalculator.VisibleSideButtons(
             available, sideButtonWidth, minVisibleSideButtons, maxVisibleSideButtons);
     }
-    
-        public void Rebuild(bool animate)
+
+    public void Rebuild(bool animate)
     {
         if (!selector || !buttonPrefab || !contentRoot) return;
+
+        CapturePreviousSlotPositions();
 
         foreach (GameObject button in _buttons) Destroy(button);
         _buttons.Clear();
@@ -76,13 +82,18 @@ public class ProjectileCarouselUI : MonoBehaviour
         int[] window = CarouselWindow.Window(
             selector.SelectedIndex, selector.availableTypes.Count, CurrentVisibleSideButtons);
 
+        // The selected type sits at this slot; everything else fans out
+        // around it, one sideButtonWidth of spacing per slot.
+        int middle = (window.Length - 1) / 2;
+        float spacing = sideButtonWidth;
+
         var targets = new List<ButtonTarget>();
 
         for (int i = 0; i < window.Length; i++)
         {
             int typeIndex = window[i];
             SO_ProjectileType type = selector.availableTypes[typeIndex];
-            bool isCenter = typeIndex == selector.SelectedIndex;
+            bool isCenter = i == middle;
 
             GameObject button = Instantiate(buttonPrefab, contentRoot);
             button.name = "ProjectileButton_" + type.displayName;
@@ -99,17 +110,40 @@ public class ProjectileCarouselUI : MonoBehaviour
             Button uiButton = button.GetComponent<Button>();
             if (uiButton)
             {
-                // Safe to close over typeIndex directly: it is a fresh local per iteration.
-                // (Only the `for` control variable `i` would be shared across iterations.)
+                // typeIndex is a fresh local per iteration, so closing over it
+                // captures the right slot for this button.
                 uiButton.onClick.AddListener(() => selector.SelectIndex(typeIndex));
                 if (spawner) uiButton.interactable = spawner.HasAmmo(type);
             }
 
+            // Lay the button out on the horizontal line of the strip. The
+            // prefab's own anchor is irrelevant here - we normalise it so
+            // every button is positioned relative to the strip's centre.
+            RectTransform rect = button.GetComponent<RectTransform>();
+            rect.anchorMin = rect.anchorMax = new Vector2(0.5f, 0.5f);
+            rect.pivot = new Vector2(0.5f, 0.5f);
+
+            float targetX = (i - middle) * spacing;
+            float startX = targetX;
+
+            // If this type was already on screen and its new slot is at most
+            // one hop away, slide it across instead of snapping. Farther
+            // jumps (wrap-around, fresh spawns) start at their target.
+            if (_previousSlotX.TryGetValue(type, out float previousX) &&
+                Mathf.Abs(previousX - targetX) <= spacing * 1.5f)
+            {
+                startX = previousX;
+            }
+
+            rect.anchoredPosition = new Vector2(startX, 0f);
+
             CanvasGroup group = button.GetComponent<CanvasGroup>();
             targets.Add(new ButtonTarget
             {
-                transform = button.transform,
+                rect = rect,
                 group = group,
+                startX = startX,
+                targetX = targetX,
                 scale = isCenter ? centerScale : sideScale,
                 alpha = isCenter ? 1f : sideAlpha
             });
@@ -123,7 +157,22 @@ public class ProjectileCarouselUI : MonoBehaviour
         else
             ApplyTargets(targets);
     }
-        
+
+    // Records where each on-screen button is right now, so the next Rebuild
+    // can animate buttons from their old slots to their new ones.
+    private void CapturePreviousSlotPositions()
+    {
+        _previousSlotX.Clear();
+        foreach (GameObject button in _buttons)
+        {
+            SO_ProjectileType type = FindTypeForButton(button.name);
+            if (!type) continue;
+
+            RectTransform rect = button.GetComponent<RectTransform>();
+            if (rect) _previousSlotX[type] = rect.anchoredPosition.x;
+        }
+    }
+
     // Refresh ammo counts / interactability of already-built buttons (ammo changed, no rebuild).
     private void RefreshAmmoDisplays()
     {
@@ -152,26 +201,29 @@ public class ProjectileCarouselUI : MonoBehaviour
     {
         foreach (var t in targets)
         {
-            t.transform.localScale = Vector3.one * t.scale;
+            t.rect.anchoredPosition = new Vector2(t.targetX, 0f);
+            t.rect.localScale = Vector3.one * t.scale;
             if (t.group) t.group.alpha = t.alpha;
         }
     }
 
     private struct ButtonTarget
     {
-        public Transform transform;
+        public RectTransform rect;
         public CanvasGroup group;
+        public float startX;
+        public float targetX;
         public float scale;
         public float alpha;
     }
-    
+
     private IEnumerator TweenButtons(List<ButtonTarget> targets)
     {
         float[] startScale = new float[targets.Count];
         float[] startAlpha = new float[targets.Count];
         for (int i = 0; i < targets.Count; i++)
         {
-            startScale[i] = targets[i].transform.localScale.x;
+            startScale[i] = targets[i].rect.localScale.x;
             startAlpha[i] = targets[i].group ? targets[i].group.alpha : 1f;
         }
 
@@ -180,12 +232,15 @@ public class ProjectileCarouselUI : MonoBehaviour
         {
             elapsed += Time.deltaTime;
             float t = Mathf.Clamp01(elapsed / animationDuration);
+            float eased = Mathf.SmoothStep(0f, 1f, t);
             for (int i = 0; i < targets.Count; i++)
             {
-                targets[i].transform.localScale =
-                    Vector3.one * Mathf.Lerp(startScale[i], targets[i].scale, t);
+                float x = Mathf.Lerp(targets[i].startX, targets[i].targetX, eased);
+                targets[i].rect.anchoredPosition = new Vector2(x, 0f);
+                targets[i].rect.localScale =
+                    Vector3.one * Mathf.Lerp(startScale[i], targets[i].scale, eased);
                 if (targets[i].group)
-                    targets[i].group.alpha = Mathf.Lerp(startAlpha[i], targets[i].alpha, t);
+                    targets[i].group.alpha = Mathf.Lerp(startAlpha[i], targets[i].alpha, eased);
             }
             yield return null;
         }
@@ -193,5 +248,4 @@ public class ProjectileCarouselUI : MonoBehaviour
         ApplyTargets(targets);   // snap to exact final values (kills float drift)
         _tweenRoutine = null;
     }
-    
 }
