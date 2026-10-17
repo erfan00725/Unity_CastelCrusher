@@ -12,7 +12,7 @@ public class ProjectileCarouselUI : MonoBehaviour
 {
     [Header("Wiring")]
     public ProjectileSelector selector;
-    public BulletSpawner spawner;
+    public AmmoManager ammoManager;
     public RectTransform contentRoot;
     public GameObject buttonPrefab;
 
@@ -37,7 +37,7 @@ public class ProjectileCarouselUI : MonoBehaviour
     private void OnEnable()
     {
         if (selector) selector.OnSelectionChanged += HandleSelectionChanged;
-        if (spawner) spawner.OnAmmoChanged += HandleAmmoChanged;
+        if (ammoManager) ammoManager.OnAmmoChanged += HandleAmmoChanged;
         UpdateVisibleSideCount();
         Rebuild(false);
     }
@@ -45,7 +45,7 @@ public class ProjectileCarouselUI : MonoBehaviour
     private void OnDisable()
     {
         if (selector) selector.OnSelectionChanged -= HandleSelectionChanged;
-        if (spawner) spawner.OnAmmoChanged -= HandleAmmoChanged;
+        if (ammoManager) ammoManager.OnAmmoChanged -= HandleAmmoChanged;
     }
 
     private void HandleSelectionChanged(SO_ProjectileType type) => Rebuild(true);
@@ -105,7 +105,7 @@ public class ProjectileCarouselUI : MonoBehaviour
             if (nameText) nameText.text = type.displayName;
 
             TMP_Text ammoText = button.transform.Find("Ammo")?.GetComponent<TMP_Text>();
-            if (ammoText && spawner) ammoText.text = spawner.GetRemaining(type).ToString();
+            if (ammoText && ammoManager) ammoText.text = ammoManager.GetRemaining(type).ToString();
 
             Button uiButton = button.GetComponent<Button>();
             if (uiButton)
@@ -113,7 +113,7 @@ public class ProjectileCarouselUI : MonoBehaviour
                 // typeIndex is a fresh local per iteration, so closing over it
                 // captures the right slot for this button.
                 uiButton.onClick.AddListener(() => selector.SelectIndex(typeIndex));
-                if (spawner) uiButton.interactable = spawner.HasAmmo(type);
+                if (ammoManager) uiButton.interactable = ammoManager.HasAmmo(type);
             }
 
             // Lay the button out on the horizontal line of the strip. The
@@ -176,17 +176,17 @@ public class ProjectileCarouselUI : MonoBehaviour
     // Refresh ammo counts / interactability of already-built buttons (ammo changed, no rebuild).
     private void RefreshAmmoDisplays()
     {
-        if (!spawner || !selector) return;
+        if (!ammoManager || !selector) return;
         foreach (GameObject button in _buttons)
         {
             SO_ProjectileType type = FindTypeForButton(button.name);
             if (!type) continue;
 
             TMP_Text ammoText = button.transform.Find("Ammo")?.GetComponent<TMP_Text>();
-            if (ammoText) ammoText.text = spawner.GetRemaining(type).ToString();
+            if (ammoText) ammoText.text = ammoManager.GetRemaining(type).ToString();
 
             Button uiButton = button.GetComponent<Button>();
-            if (uiButton) uiButton.interactable = spawner.HasAmmo(type);
+            if (uiButton) uiButton.interactable = ammoManager.HasAmmo(type);
         }
     }
 
