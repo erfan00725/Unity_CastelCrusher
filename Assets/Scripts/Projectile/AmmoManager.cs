@@ -44,7 +44,6 @@ public class AmmoManager : MonoBehaviour
         }
 
         projectileSelector.Initialize(types);
-        RefreshSelectedAmmoText();
     }
 
     public int DecreaseAmmo(SO_ProjectileType type)
@@ -75,15 +74,5 @@ public class AmmoManager : MonoBehaviour
     public int GetRemaining(SO_ProjectileType type)
     {
         return type && _ammo.TryGetValue(type, out int remaining) ? remaining : 0;
-    }
-    
-    public void RefreshSelectedAmmoText()
-    {
-        ChangeUiBulletCountText(GetRemaining(projectileSelector.SelectedType));
-    }
-    
-    public void ChangeUiBulletCountText(int newValue)
-    {
-        if (uiManager) uiManager.SetBulletCountText(newValue);
     }
 }

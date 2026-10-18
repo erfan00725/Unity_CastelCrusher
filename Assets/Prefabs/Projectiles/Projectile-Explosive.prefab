@@ -145,6 +145,8 @@ MonoBehaviour:
   baseForcePower: 700
   delayBeforeDestroy: 1
   shakeIntensity: 0.8
+  ammoManager: {fileID: 0}
+  bulletId: 2
 --- !u!114 &-6513623392403331699
 MonoBehaviour:
   m_ObjectHideFlags: 0

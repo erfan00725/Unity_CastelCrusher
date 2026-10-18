@@ -7,6 +7,9 @@ public class Projectile : MonoBehaviour
     public float baseForcePower = 1500;
     public float delayBeforeDestroy = 0.5f;
     public float shakeIntensity = 1f;
+    public AmmoManager ammoManager;
+    
+    public int bulletId;
     
     private Rigidbody _rb;
 
@@ -50,6 +53,11 @@ public class Projectile : MonoBehaviour
         if (cameraShakeManager)
         {
             cameraShakeManager.Shake(force * shakeIntensity);
+        }
+
+        if (ammoManager)
+        {
+            ammoManager.DecreaseCurrentAmmo();
         }
     }
 }

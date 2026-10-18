@@ -15,14 +15,14 @@ public class InputController : MonoBehaviour
     
     public float touchSensitivityX = 50;
     
-    private BuletLuncher _buletLuncher;
+    private ProjectileLuncher projectileLuncher;
 
 
     void Start()
     {
 
         
-        _buletLuncher = GetComponent<BuletLuncher>();
+        projectileLuncher = GetComponent<ProjectileLuncher>();
         
         _touchSensitivityY = touchSensitivityMaxY;
     }
@@ -50,16 +50,16 @@ public class InputController : MonoBehaviour
                     _touchSensitivityY = Mathf.Lerp(touchSensitivityMaxY, touchSensitivityMinY , _dragPos.y / windowHeight);
                     _dragPos.y = Mathf.Clamp(((_dragPos.y / windowHeight) * _touchSensitivityY * 60) + 60, 0, 60);
 
-                    _buletLuncher.RotateCatapultHead(_dragPos.y);
+                    projectileLuncher.RotateCatapultHead(_dragPos.y);
 
-                    _buletLuncher.RotateCatapultBody(_dragPos.x);
+                    projectileLuncher.RotateCatapultBody(_dragPos.x);
                     
                     
                     
                     break;
                 case TouchPhase.Ended:
                     _endPos = touch.position;
-                    _buletLuncher.ResetCatapultHeadRotation();
+                    projectileLuncher.ResetCatapultHeadRotation();
                     // _buletLuncher.ResetCatapultBodyRotation();
                     break;
             }

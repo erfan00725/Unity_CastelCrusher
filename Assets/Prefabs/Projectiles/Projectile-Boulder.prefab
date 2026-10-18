@@ -70,7 +70,7 @@ PrefabInstance:
       objectReference: {fileID: -2383952699438097375, guid: 64a4b9abc85470f42881e931f8e5fc4c, type: 3}
     - target: {fileID: 919132149155446097, guid: e7d34fba6981b6c488ca93c0161ead04, type: 3}
       propertyPath: m_Name
-      value: Projectile-Stone-Boulder
+      value: Projectile-Boulder
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -142,6 +142,8 @@ MonoBehaviour:
   baseForcePower: 1000
   delayBeforeDestroy: 1
   shakeIntensity: 1
+  ammoManager: {fileID: 0}
+  bulletId: 1
 --- !u!114 &-6513623392403331699
 MonoBehaviour:
   m_ObjectHideFlags: 0

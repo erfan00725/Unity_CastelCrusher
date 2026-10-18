@@ -3,9 +3,9 @@ using System.Collections;
 using UnityEngine;
 using UnityEngine.Serialization;
 
-public class BuletLuncher : MonoBehaviour
+public class ProjectileLuncher : MonoBehaviour
 {
-    public BulletSpawner bs;
+    public ProjectileSpawner bs;
     
     public float cooldown = 0.5f;
 
@@ -18,7 +18,9 @@ public class BuletLuncher : MonoBehaviour
 
     public GameObject catapultHead;
 
-    private Projectile _activeBullet;
+    public ProjectileSelector projectileSelector;
+
+    private Projectile _activeProjectile;
 
     private Quaternion _initiateCatapultHeadRotation = Quaternion.identity;
     
@@ -27,11 +29,21 @@ public class BuletLuncher : MonoBehaviour
     private Coroutine _headResetRoutine;
     
     
+    private void OnEnable()
+    {
+        if (projectileSelector) projectileSelector.OnSelectionChanged += HandleSelectionChanged;
+    }
+
+    private void OnDisable()
+    {
+        if (projectileSelector) projectileSelector.OnSelectionChanged -= HandleSelectionChanged;
+    }
+
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        _activeBullet = bs.InstantiateBullet();
+        _activeProjectile = bs.InstantiateBulletSafe();
         
         if (catapultHead)
         {
@@ -66,7 +78,7 @@ public class BuletLuncher : MonoBehaviour
 
     public void ResetCatapultHeadRotation()
     {
-        if (_activeBullet)
+        if (_activeProjectile)
         {
             float mag = 1 - (Mathf.Clamp(catapultHead.transform.localRotation.eulerAngles.magnitude, 0, 60) / 60);
             if (mag > 0.1f)
@@ -76,7 +88,7 @@ public class BuletLuncher : MonoBehaviour
                     audioConfig.Play(luncherReleaseAudio, mag);
                 }
                 
-                _activeBullet.Shoot(mag);
+                _activeProjectile.Shoot(mag);
                 StartCoroutine(DelaySpawn(cooldown));
             }
         }
@@ -116,6 +128,11 @@ public class BuletLuncher : MonoBehaviour
     IEnumerator DelaySpawn(float delayTime)
     {
         yield return new WaitForSeconds(delayTime);
-        _activeBullet = bs.InstantiateBullet();
+        _activeProjectile = bs.InstantiateBulletSafe();
+    }
+    
+    private void HandleSelectionChanged(SO_ProjectileType type)
+    {
+        _activeProjectile = bs.InstantiateBulletSafe(type);
     }
 }
