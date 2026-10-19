@@ -48,20 +48,29 @@ README.md
 **When a change notably alters game design, update `docs/GDD.md` in the same session.**
 
 Notably altering changes include:
+
 - adding or removing a mechanic (e.g. multi-catapult switching, new projectile behavior)
 - changing scoring, win/lose, or progression rules
 - adding/removing block types, projectile types, or enemy types
 - changing level structure or meta systems (menus, stars, unlocks)
 
 When updating the GDD:
+
 1. Edit the affected section's content (Persian body under English headers).
 2. Keep the **status badge** truthful: `[Implemented]` · `[Partial]` · `[Planned]` · `[Future]`.
 3. Do **not** invent features the user hasn't decided — leave those under `Future / Not Decided`.
 
 Notable changes that do **not** require a GDD edit: pure refactors, bug fixes that restore intended behavior, cosmetic/VFX tuning, code comments, asset swaps that don't change design.
 
+## Plans & Learning Rules (important)
+
+**Castle Crusher is a learning project (Unity / C#). Two rules apply to all plans written in this project:**
+
+1. **Every plan must teach.** In every plan, explain any new tool, feature, component, class, method, etc. that the plan uses or introduces, so the user learns each concept while implementing the feature.
+2. **Never implement unless told.** Do not implement anything yourself unless the user explicitly asks. Instead, provide instructions or a plan so the user implements it themselves.
+
 ## Conventions
 
 - GDD language: **English headers, Persian body**. CLAUDE.md and code stay English.
 - Status badges must reflect reality — never mark something `[Implemented]` unless it exists in the build.
-- Commit messages: plain imperative English, end with `Co-Authored-By: Claude Sonnet 4.5 <noreply@anthropic.com>` when created with AI assistance.
+- Commit messages: plain imperative English
