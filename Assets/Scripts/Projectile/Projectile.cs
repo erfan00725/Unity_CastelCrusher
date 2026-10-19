@@ -9,8 +9,6 @@ public class Projectile : MonoBehaviour
     public float shakeIntensity = 1f;
     public AmmoManager ammoManager;
     
-    public int bulletId;
-    
     private Rigidbody _rb;
 
     private ProjectileSoundManager _soundManager;

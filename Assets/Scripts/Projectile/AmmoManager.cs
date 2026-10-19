@@ -4,7 +4,6 @@ using System.Collections.Generic;
 
 public class AmmoManager : MonoBehaviour
 {
-    public UIManager uiManager;
     public ProjectileSelector projectileSelector;
     public SO_LevelData levelData;
 
@@ -48,17 +47,15 @@ public class AmmoManager : MonoBehaviour
 
     public int DecreaseAmmo(SO_ProjectileType type)
     {
-        --_ammo[type];
-        OnAmmoChanged?.Invoke(type, GetCurrentAmmoCount());
+        int newAmmo = --_ammo[type];
+        OnAmmoChanged?.Invoke(type, newAmmo);
         return _ammo[type];
     }
     
     public int DecreaseCurrentAmmo()
     {
-        SO_ProjectileType type = projectileSelector.SelectedType; 
-        --_ammo[type];
-        OnAmmoChanged?.Invoke(type, GetCurrentAmmoCount());
-        return _ammo[type];
+        SO_ProjectileType type = projectileSelector.SelectedType;
+        return DecreaseAmmo(type);
     }
     
     public int GetCurrentAmmoCount()

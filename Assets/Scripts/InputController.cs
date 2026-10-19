@@ -51,7 +51,6 @@ public class InputController : MonoBehaviour
                     _dragPos.y = Mathf.Clamp(((_dragPos.y / windowHeight) * _touchSensitivityY * 60) + 60, 0, 60);
 
                     projectileLuncher.RotateCatapultHead(_dragPos.y);
-
                     projectileLuncher.RotateCatapultBody(_dragPos.x);
                     
                     

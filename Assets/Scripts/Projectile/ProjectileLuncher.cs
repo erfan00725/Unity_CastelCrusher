@@ -1,11 +1,9 @@
-using System;
 using System.Collections;
 using UnityEngine;
-using UnityEngine.Serialization;
 
 public class ProjectileLuncher : MonoBehaviour
 {
-    public ProjectileSpawner bs;
+    public ProjectileSpawner projectileSpawner;
     
     public float cooldown = 0.5f;
 
@@ -27,6 +25,9 @@ public class ProjectileLuncher : MonoBehaviour
     private Quaternion _initiateCatapultBodyRotation = Quaternion.identity;
 
     private Coroutine _headResetRoutine;
+
+    private bool _isOnDelay = false;
+    private bool _isCatapultMoving = false;
     
     
     private void OnEnable()
@@ -43,8 +44,6 @@ public class ProjectileLuncher : MonoBehaviour
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        _activeProjectile = bs.InstantiateBulletSafe();
-        
         if (catapultHead)
         {
             _initiateCatapultHeadRotation = catapultHead.transform.localRotation;
@@ -61,6 +60,7 @@ public class ProjectileLuncher : MonoBehaviour
             _headResetRoutine = null;
         }
 
+        _isCatapultMoving = true;
         float xAngle = catapultHead.transform.localRotation.x;
         float  yAngle = catapultHead.transform.localRotation.y;
         catapultHead.transform.localRotation = Quaternion.Euler(xAngle, yAngle, zAngle);
@@ -78,6 +78,7 @@ public class ProjectileLuncher : MonoBehaviour
 
     public void ResetCatapultHeadRotation()
     {
+        _isCatapultMoving = false;
         if (_activeProjectile)
         {
             float mag = 1 - (Mathf.Clamp(catapultHead.transform.localRotation.eulerAngles.magnitude, 0, 60) / 60);
@@ -127,12 +128,16 @@ public class ProjectileLuncher : MonoBehaviour
     
     IEnumerator DelaySpawn(float delayTime)
     {
+        _isOnDelay = true;
         yield return new WaitForSeconds(delayTime);
-        _activeProjectile = bs.InstantiateBulletSafe();
+        _isOnDelay = false;
+        _activeProjectile = projectileSpawner.InstantiateBulletSafe();
     }
     
     private void HandleSelectionChanged(SO_ProjectileType type)
     {
-        _activeProjectile = bs.InstantiateBulletSafe(type);
+        // also called in start of the script
+        if (_isOnDelay || _isCatapultMoving) return;
+        _activeProjectile = projectileSpawner.InstantiateBulletSafe(type);
     }
 }
