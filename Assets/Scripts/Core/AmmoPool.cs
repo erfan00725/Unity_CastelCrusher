@@ -18,20 +18,17 @@ namespace Core
 
         public int Get(TKey key)
         {
-            return _counts[key];
+            return _counts.GetValueOrDefault(key, 0);
         }
 
         public bool Has(TKey key)
         {
-            return _counts.ContainsKey(key);
+            return _counts.TryGetValue(key, out int count) && count > 0;
         }
 
         public int Consume(TKey key)
         {
-            if (_counts[key] <= 0)
-            {
-                return 0;
-            }
+            if (!Has(key)) return 0;   // unknown key or already empty
 
             int newValue = --_counts[key];
             
