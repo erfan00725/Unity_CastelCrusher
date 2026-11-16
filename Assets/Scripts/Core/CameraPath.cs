@@ -62,7 +62,16 @@ namespace Core
         
         public PolylinePath(IReadOnlyList<Vector3> points)
         {
-            int count = points.Count;
+            int count = points?.Count ?? 0;
+            if (count == 0)
+            {
+                // Degenerate path: stand still. Evaluate() returns _points[0] because TotalLength is 0.
+                _points = new[] { Vector3.zero };
+                _cumDist = new float[] { 0f };
+                TotalLength = 0f;
+                return;
+            }
+            
             _points = new Vector3[count];
             _cumDist = new float[count];
 
@@ -104,7 +113,7 @@ namespace Core
             float local = (target - _cumDist[i]) / segmentLen;
 
             return Vector3.Lerp(_points[i], _points[i+1], local);
-        }   // t in [0,1], constant speed by arc l ength
+        }   // t in [0,1], constant speed by arc length
         
         // A -> B -> C 
     }
