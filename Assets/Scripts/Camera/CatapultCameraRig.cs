@@ -18,6 +18,34 @@ public class CatapultCameraRig : MonoBehaviour
     private Coroutine _moveRoutine;
     private Catapult _followTarget;
 
+    private void LateUpdate()
+    {
+        if (_state != RigState.Following || !_followTarget || !_followTarget.cameraAnchor)
+            return;
+    
+        CameraAnchor anchor = _followTarget.cameraAnchor;
+    
+        // 1. "How far has the body rotated away from its rest pose", in world space.
+        Quaternion bodyDelta = _followTarget.transform.rotation * Quaternion.Inverse(_followTarget.RestRotation);
+    
+        // 2. Where the anchor would be if it were welded to that rotation.
+        Vector3 anchorRestLocal = anchor.transform.localPosition;
+        Vector3 anchorRestWorld = _followTarget.RestPosition + _followTarget.RestRotation * anchorRestLocal;
+        Vector3 targetPos = _followTarget.RestPosition + bodyDelta * (anchorRestWorld - _followTarget.RestPosition);
+        Quaternion targetRot = bodyDelta * _followTarget.RestRotation * anchor.transform.localRotation;
+    
+        // 3. Move toward it at a RATE, not a ratio — frame-rate independent.
+        float k = 1f - Mathf.Exp(-followSharpness * Time.deltaTime);
+        transform.rotation = Quaternion.Slerp(transform.rotation, targetRot, k);
+        transform.position = Vector3.Lerp(transform.position, targetPos, k);
+    
+        // 4. Kill the drift once it is imperceptible.
+        if (Quaternion.Angle(transform.rotation, targetRot) < 0.05f)
+        {
+            transform.SetPositionAndRotation(targetPos, targetRot);
+        }
+    }
+
     public void SnapTo(Catapult catapult)
     {
         if (catapult == null || catapult.cameraAnchor == null)
